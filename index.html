@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div class="wrap">
+        <div>
+            <a href="/index" to="/index">首页</a>
+            <a href="/list" to="/list">列表</a>
+        </div>
+        <div class="content" id="content">
+
+        </div>
+    </div>
+    <script>
+        class Router{
+            constructor({mode,routes}){
+                this.mode = mode;
+                this.routes = routes;
+                this.routerLink();
+                //监听浏览器前进后退
+                window.addEventListener('popstate',(e)=>{
+                    this.routerView(window.location.pathname);
+                })
+            }
+            routerLink(){
+                let a = document.querySelectorAll('a');
+                a.forEach(el=>{
+                    el.addEventListener('click',(e)=>{
+                        e.preventDefault();
+                         //切换视图
+                        history.pushState({},'',el.href);
+                        this.routerView(el.getAttribute('to'));
+                    })
+                })
+               
+            }
+            routerView(path){
+                // console.log(path);
+                // console.log(this.routes.find(item=>item.path===path));
+                content.innerHTML = this.routes.find(item=>item.path===path).component;
+            }
+        }
+        new Router({
+            mode:'history',
+            routes:[
+                {
+                    path:'/index',
+                    component:'<div>index</div>'
+                },
+                {
+                    path:'/list',
+                    component:'<div>list</div>'
+                }
+            ]
+        })
+    
+    </script>
+</body>
+</html>
